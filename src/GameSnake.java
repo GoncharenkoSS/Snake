@@ -18,7 +18,7 @@ public class GameSnake {
     final int START_SNAKE_SIZE = 6;
     final int START_SNAKE_X = 10;
     final int START_SNAKE_Y = 10;
-    final int DEALAY = 150;
+    final int DELAY = 150;
     final int LEFT = 37;
     final int UP = 38;
     final int RIGHT = 39;
@@ -79,11 +79,15 @@ public class GameSnake {
         food = new Food(); //Создаем новую точку с едой
         island = new Island(); //Создаем новый остров
         island.newIsland();
-        island.newIsland();
-        island.newIsland();
-        island.newIsland();
-        island.newIsland();
+        //        island.newIsland();
+        //        island.newIsland();
+        //        island.newIsland();
+        //        island.newIsland();
         snake.sound();
+        for (int i = 0; i < island.listIsland.size(); i++)
+            System.out.println(island.listIsland.get(i).getX() + ", " + island.listIsland.get(i).getY());
+        System.out.println("----------------------------------------------------");
+
 
         while (!gameOver) { //Пока игра не окончена
             snake.move(); //Змейка идет
@@ -92,7 +96,7 @@ public class GameSnake {
             gameField.repaint(); //Перекрасить в зеленый новую точку в змейке
 
             try {
-                Thread.sleep(DEALAY); //Задержка движения змейки
+                Thread.sleep(DELAY); //Задержка движения змейки
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -199,6 +203,7 @@ public class GameSnake {
                 snake.remove(snake.size() - 1); //Либо уменьшаем длину змейки
             }
         }
+
         //Метод проигрывания музыки
         void sound() {
             try {
@@ -230,12 +235,12 @@ public class GameSnake {
             if (this.direction == PAUSE) var = true;
             //Отключаем звук
             if (direction == MUTE) {
-                if(!mute) {
+                if (!mute) {
                     clip.stop(); //Останавливаем музыку
                     clip.close(); //Закрываем поток
-                    mute=true;
-                }else {
-                    mute=false;
+                    mute = true;
+                } else {
+                    mute = false;
                     sound();
                 }
             }
@@ -270,13 +275,13 @@ public class GameSnake {
             return this.getX() == -1;
         }
 
-        Point random(){
+        Point random() {
             int x, y;
             x = random.nextInt(FIELD_WIDTH);
             y = random.nextInt(FIELD_HEIGHT);
-            if (island.isInsideIsland(x, y) || snake.isInsideSnake(x, y))
+            if ((island.isInsideIsland(x, y)) || (snake.isInsideSnake(x, y)))
                 random();
-            return new Point(x,y);
+            return new Point(x, y);
         }
 
         //Рандом появления следующей точки еды
@@ -285,6 +290,7 @@ public class GameSnake {
                 random();
             } while (snake.isInsideSnake(random().getX(), random().getY()) || island.isInsideIsland(random().getX(), random().getY()));
             this.setXY(random().getX(), random().getY());
+            System.out.println(food.random().getX() + ", " + food.random().getY());
         }
     }
 
@@ -311,8 +317,8 @@ public class GameSnake {
         void newIsland() {
             int x, y;
             do {
-                x = random.nextInt(FIELD_WIDTH - 3);
-                y = random.nextInt(FIELD_HEIGHT - 3);
+                x = random.nextInt(FIELD_WIDTH);
+                y = random.nextInt(FIELD_HEIGHT);
             } while (snake.isInsideSnake(x, y) || isInsideIsland(x, y));
             list(x, y);
         }
@@ -440,11 +446,9 @@ public class GameSnake {
             q.drawString("M - Mute sound", (FIELD_WIDTH * POINT_RADIUS - rules2.stringWidth("M - Mute sound")) / 2,
                     350);
             //Добавляем прослушивать кнопки
-            button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    frameSt.toBack();
-                    frameSt.dispose();
-                }
+            button.addActionListener(e -> {
+                frameSt.toBack();
+                frameSt.dispose();
             });
         }
     }
