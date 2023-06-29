@@ -37,16 +37,34 @@ public class GameSnake {
     boolean mute = false;
     Random random = new Random();
 
-
-    ///////////////////////////////////////////MAIN////////////////////////////////////////////////////////////
-
-
     public static void main(String[] args) {
         //Старт окна старта
         new GameSnake().st();
         //старт окна игры
         new GameSnake().go();
     }
+
+
+    ///////////////////////////////////////////////////START//////////////////////////////////////////////////////
+
+
+    //Метод окна старт
+    void st() {
+        //Создание окна
+        frameSt = new JFrame("Game SNAKE");
+        frameSt.setVisible(true);
+        frameSt.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frameSt.setSize(FIELD_WIDTH * POINT_RADIUS + 13, FIELD_HEIGHT * POINT_RADIUS + 36);
+        frameSt.setResizable(false);
+        frameSt.setLocation(300, 300);
+        frameSt.toFront();
+        //Создаем дизайн в окне игры
+        startWindow = new StartWindow();
+        startWindow.setBackground(Color.gray);
+
+        frameSt.getContentPane().add(BorderLayout.CENTER, startWindow);
+    }
+
 
     ///////////////////////////////////////////////////GO//////////////////////////////////////////////////////
 
@@ -79,15 +97,11 @@ public class GameSnake {
         food = new Food(); //Создаем новую точку с едой
         island = new Island(); //Создаем новый остров
         island.newIsland();
-        //        island.newIsland();
-        //        island.newIsland();
-        //        island.newIsland();
-        //        island.newIsland();
+        island.newIsland();
+        island.newIsland();
+        island.newIsland();
+        island.newIsland();
         snake.sound();
-        for (int i = 0; i < island.listIsland.size(); i++)
-            System.out.println(island.listIsland.get(i).getX() + ", " + island.listIsland.get(i).getY());
-        System.out.println("----------------------------------------------------");
-
 
         while (!gameOver) { //Пока игра не окончена
             snake.move(); //Змейка идет
@@ -101,27 +115,6 @@ public class GameSnake {
                 e.printStackTrace();
             }
         }
-    }
-
-
-    ///////////////////////////////////////////////////START//////////////////////////////////////////////////////
-
-
-    //Метод окна старт
-    void st() {
-        //Создание окна
-        frameSt = new JFrame("Game SNAKE");
-        frameSt.setVisible(true);
-        frameSt.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        frameSt.setSize(FIELD_WIDTH * POINT_RADIUS + 13, FIELD_HEIGHT * POINT_RADIUS + 36);
-        frameSt.setResizable(false);
-        frameSt.setLocation(300, 300);
-        frameSt.toFront();
-        //Создаем дизайн в окне игры
-        startWindow = new StartWindow();
-        startWindow.setBackground(Color.gray);
-
-        frameSt.getContentPane().add(BorderLayout.CENTER, startWindow);
     }
 
 
@@ -255,46 +248,6 @@ public class GameSnake {
     }
 
 
-    ////////////////////////////////////////////////////FOOD/////////////////////////////////////////////
-
-
-    class Food extends Point {
-        //Конструктор
-        public Food() {
-            super(-1, -1);
-            this.color = Color.RED;
-        }
-
-        //Метод съесть точку
-        void eat() {
-            this.setXY(-1, -1);
-        }
-
-        //Если точка была съедена
-        boolean isEaten() {
-            return this.getX() == -1;
-        }
-
-        Point random() {
-            int x, y;
-            x = random.nextInt(FIELD_WIDTH);
-            y = random.nextInt(FIELD_HEIGHT);
-            if ((island.isInsideIsland(x, y)) || (snake.isInsideSnake(x, y)))
-                random();
-            return new Point(x, y);
-        }
-
-        //Рандом появления следующей точки еды
-        void next() {
-            do {
-                random();
-            } while (snake.isInsideSnake(random().getX(), random().getY()) || island.isInsideIsland(random().getX(), random().getY()));
-            this.setXY(random().getX(), random().getY());
-            System.out.println(food.random().getX() + ", " + food.random().getY());
-        }
-    }
-
-
     ////////////////////////////////////////////ISLAND/////////////////////////////////////////////////////
 
 
@@ -378,7 +331,41 @@ public class GameSnake {
     }
 
 
-    /////////////////////////////////////////////ОКНО ИГРЫ////////////////////////////////////////////////
+    ////////////////////////////////////////////////////FOOD/////////////////////////////////////////////
+
+
+    class Food extends Point {
+        //Конструктор
+        public Food() {
+            super(-1, -1);
+            this.color = Color.RED;
+        }
+
+        //Метод съесть точку
+        void eat() {
+            this.setXY(-1, -1);
+        }
+
+        //Если точка была съедена
+        boolean isEaten() {
+            return this.getX() == -1;
+        }
+
+        //Рандом появления следующей точки еды
+        void next() {
+            int x, y;
+            do {
+                x = random.nextInt(FIELD_WIDTH);
+                y = random.nextInt(FIELD_HEIGHT);
+            } while (snake.isInsideSnake(x, y) || island.isInsideIsland(x, y));
+            this.setXY(x, y);
+        }
+    }
+
+
+    ////////////////////////////////////////////////////DESIGN/////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////WINDOW GAME/////////////////////////////////////////////////////
 
 
     public class GameField extends JPanel {
@@ -441,10 +428,10 @@ public class GameSnake {
             FontMetrics rules = q.getFontMetrics();
             q.drawString("SPASE - Pause", (FIELD_WIDTH * POINT_RADIUS - rules.stringWidth("SPASE - Pause")) / 2,
                     310);
-            q.setFont(new Font("Arial", Font.BOLD, 22));
-            FontMetrics rules2 = q.getFontMetrics();
-            q.drawString("M - Mute sound", (FIELD_WIDTH * POINT_RADIUS - rules2.stringWidth("M - Mute sound")) / 2,
-                    350);
+ //           q.setFont(new Font("Arial", Font.BOLD, 22));
+ //           FontMetrics rules2 = q.getFontMetrics();
+ //           q.drawString("M - Mute sound", (FIELD_WIDTH * POINT_RADIUS - rules2.stringWidth("M - Mute sound")) / 2,
+ //                   350);
             //Добавляем прослушивать кнопки
             button.addActionListener(e -> {
                 frameSt.toBack();
