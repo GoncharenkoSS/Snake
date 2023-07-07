@@ -391,6 +391,8 @@ public class GameSnake {
                 FontMetrics fm = q.getFontMetrics();
                 q.drawString("GAME OVER", (FIELD_WIDTH * POINT_RADIUS - fm.stringWidth("GAME OVER")) / 2,
                         (FIELD_HEIGHT * POINT_RADIUS) / 2);
+                clip.stop(); //Останавливаем музыку
+                clip.close(); //Закрываем поток
             }
             //Надпись ПАУЗА
             if (var) {
@@ -428,10 +430,10 @@ public class GameSnake {
             FontMetrics rules = q.getFontMetrics();
             q.drawString("SPASE - Pause", (FIELD_WIDTH * POINT_RADIUS - rules.stringWidth("SPASE - Pause")) / 2,
                     310);
- //           q.setFont(new Font("Arial", Font.BOLD, 22));
- //           FontMetrics rules2 = q.getFontMetrics();
- //           q.drawString("M - Mute sound", (FIELD_WIDTH * POINT_RADIUS - rules2.stringWidth("M - Mute sound")) / 2,
- //                   350);
+            q.setFont(new Font("Arial", Font.BOLD, 22));
+            FontMetrics rules2 = q.getFontMetrics();
+            q.drawString("M - Mute sound", (FIELD_WIDTH * POINT_RADIUS - rules2.stringWidth("M - Mute sound")) / 2,
+                    350);
             //Добавляем прослушивать кнопки
             button.addActionListener(e -> {
                 frameSt.toBack();
